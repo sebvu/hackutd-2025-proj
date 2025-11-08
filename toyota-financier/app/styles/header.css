@@ -1,0 +1,13 @@
+.header-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    height: 6rem;
+    background-color: hsl(198, 55%, 75%);
+    border-bottom: 1px solid black;
+}
