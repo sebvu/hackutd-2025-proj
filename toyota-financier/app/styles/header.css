@@ -1,4 +1,4 @@
-.header-container{
+.header-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -10,8 +10,8 @@
     height: 6rem;
     color: #000000;
     background-color: #FFFFFF;
-    border-bottom: 1px solid black;
-    padding: 2rem;
+    padding: 0 2rem;
+    border-bottom: 2px solid #000000;
 }
 
 .header-logo-container {
