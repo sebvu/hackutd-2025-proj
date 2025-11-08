@@ -8,6 +8,23 @@
     right: 0;
     z-index: 1;
     height: 6rem;
-    background-color: hsl(198, 55%, 75%);
+    color: #000000;
+    background-color: #FFFFFF;
     border-bottom: 1px solid black;
+    padding: 2rem;
+}
+
+.header-logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4vh;
+    cursor: pointer;
+    opacity: 0.9;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transform: scale(1);
+}
+
+.header-logo {
+  width: 5.5rem;
 }
