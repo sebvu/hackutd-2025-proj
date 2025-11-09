@@ -12,11 +12,11 @@ const Header: React.FC = () => {
       <div className="header-logo-container">
         <Image className="header-logo" src={logo} alt="Toyota Logo"/>
       </div>
-      <h1>My Website</h1>
+      <h1>Toyota Stuff</h1>
       <nav>
         <ul style={{ display: "flex", gap: "1rem", listStyle: "none" }}>
-          <li><Link href="/">Favorites</Link></li>
-          <li><Link href="/about">Sign In</Link></li>
+          <li><Link href="/favorites">Favorites</Link></li>
+          <li><Link href="/signin">Sign In</Link></li>
         </ul>
       </nav>
     </header>
