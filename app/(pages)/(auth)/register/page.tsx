@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useAuth } from "@/app/contexts/AuthContext";
+import Link from "next/link";
 import "@/app/styles/Register.css";
 
 export default function Register() {
@@ -58,12 +59,12 @@ export default function Register() {
           </button>
         </form>
 
-        <p
+        <Link
           className="signup-already-text"
-          onClick={() => (window.location.href = "/signin")}
+          href="/signin"
         >
           Already have an account?
-        </p>
+        </Link>
       </div>
     </div>
   );

@@ -75,13 +75,21 @@
   background-color: #005fdd;
 }
 
-.signup-already-text {
-  margin-top: 1.5rem;
+.guest-text, .signup-already-text {
   margin-bottom: 0.5rem;
   color: #3531ff;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color 0.2 ease;
 }
+
+.signup-already-text {
+  margin-top: 1.5rem;
+}
+
+.guest-text {
+  margin-top: 0.5rem;
+}
+
 
 .signup-already-text:hover {
   color: #1313ff;

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useAuth } from "@/app/contexts/AuthContext";
+import Link from "next/link";
 import "@/app/styles/Register.css";
 
 export default function SignIn() {
@@ -57,12 +58,19 @@ export default function SignIn() {
           </button>
         </form>
 
-        <p
+        <Link
           className="signup-already-text"
-          onClick={() => (window.location.href = "/register")}
+          href="/register"
         >
           Don’t have an account?
-        </p>
+        </Link>
+        <p>or</p>
+        <Link
+          className="guest-text"
+          href="/filter"
+        >
+          Continue as guest
+        </Link>
       </div>
     </div>
   );
