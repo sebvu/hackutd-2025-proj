@@ -55,14 +55,16 @@ export default function Filter() {
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [torqueRange, setTorqueRange] = useState<[number, number]>([100, 500]);
   const [mileageCityRange, setMileageCityRange] = useState<[number, number]>([
-    10, 150,
+    10, 60,
   ]);
   const [mileageHighwayRange, setMileageHighwayRange] = useState<
     [number, number]
-  >([10, 150]);
-  const [tankSizeRange, setTankSizeRange] = useState<[number, number]>([0, 30]);
+  >([15, 80]);
+  const [tankSizeRange, setTankSizeRange] = useState<[number, number]>([
+    20, 100,
+  ]);
   const [accelerationRange, setAccelerationRange] = useState<[number, number]>([
-    0, 15,
+    2, 15,
   ]);
   const [selectedTransmission, setSelectedTransmission] = useState<string[]>(
     [],
@@ -324,138 +326,64 @@ export default function Filter() {
               {advancedOpen && (
                 <div className="advanced-filters-menu">
                   {/* Torque */}
-                  <label>Torque (Nm):</label>
-                  <input
-                    type="range"
-                    min="100"
-                    max="500"
-                    step="10"
-                    value={torqueRange[0]}
-                    onChange={(e) =>
-                      setTorqueRange([+e.target.value, torqueRange[1]])
-                    }
-                  />
-                  <input
-                    type="range"
-                    min="100"
-                    max="500"
-                    step="10"
-                    value={torqueRange[1]}
-                    onChange={(e) =>
-                      setTorqueRange([torqueRange[0], +e.target.value])
-                    }
+                  <WeightSlider
+                    label="Torque (Nm)"
+                    values={torqueRange}
+                    setValues={setTorqueRange}
+                    min={100}
+                    max={600}
+                    step={10}
+                    unit="Nm"
+                    color="#ff4d4f"
                   />
 
                   {/* City Mileage */}
-                  <label>City Mileage (MPG):</label>
-                  <input
-                    type="range"
-                    min="10"
-                    max="150"
-                    step="5"
-                    value={mileageCityRange[0]}
-                    onChange={(e) =>
-                      setMileageCityRange([
-                        +e.target.value,
-                        mileageCityRange[1],
-                      ])
-                    }
-                  />
-                  <input
-                    type="range"
-                    min="10"
-                    max="150"
-                    step="5"
-                    value={mileageCityRange[1]}
-                    onChange={(e) =>
-                      setMileageCityRange([
-                        mileageCityRange[0],
-                        +e.target.value,
-                      ])
-                    }
+                  <WeightSlider
+                    label="City Mileage (MPG)"
+                    values={mileageCityRange}
+                    setValues={setMileageCityRange}
+                    min={5}
+                    max={50}
+                    step={1}
+                    unit="MPG"
+                    color="#ff4d4f"
                   />
 
                   {/* Highway Mileage */}
-                  <label>Highway Mileage (MPG):</label>
-                  <input
-                    type="range"
-                    min="10"
-                    max="150"
-                    step="5"
-                    value={mileageHighwayRange[0]}
-                    onChange={(e) =>
-                      setMileageHighwayRange([
-                        +e.target.value,
-                        mileageHighwayRange[1],
-                      ])
-                    }
-                  />
-                  <input
-                    type="range"
-                    min="10"
-                    max="150"
-                    step="5"
-                    value={mileageHighwayRange[1]}
-                    onChange={(e) =>
-                      setMileageHighwayRange([
-                        mileageHighwayRange[0],
-                        +e.target.value,
-                      ])
-                    }
+                  <WeightSlider
+                    label="Highway Mileage (MPG)"
+                    values={mileageHighwayRange}
+                    setValues={setMileageHighwayRange}
+                    min={5}
+                    max={50}
+                    step={1}
+                    unit="MPG"
+                    color="#ff4d4f"
                   />
 
                   {/* Tank Size */}
-                  <label>Tank Size (L):</label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="30"
-                    step="1"
-                    value={tankSizeRange[0]}
-                    onChange={(e) =>
-                      setTankSizeRange([+e.target.value, tankSizeRange[1]])
-                    }
-                  />
-                  <input
-                    type="range"
-                    min="0"
-                    max="30"
-                    step="1"
-                    value={tankSizeRange[1]}
-                    onChange={(e) =>
-                      setTankSizeRange([tankSizeRange[0], +e.target.value])
-                    }
+                  <WeightSlider
+                    label="Tank Size (L)"
+                    values={tankSizeRange}
+                    setValues={setTankSizeRange}
+                    min={10}
+                    max={35}
+                    step={1}
+                    unit="L"
+                    color="#ff4d4f"
                   />
 
                   {/* Acceleration */}
-                  <label>Acceleration (0–60s):</label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="15"
-                    step="0.1"
-                    value={accelerationRange[0]}
-                    onChange={(e) =>
-                      setAccelerationRange([
-                        +e.target.value,
-                        accelerationRange[1],
-                      ])
-                    }
+                  <WeightSlider
+                    label="Acceleration (0–60 mph in seconds)"
+                    values={accelerationRange}
+                    setValues={setAccelerationRange}
+                    min={1}
+                    max={15}
+                    step={0.1}
+                    unit="s"
+                    color="#ff4d4f"
                   />
-                  <input
-                    type="range"
-                    min="0"
-                    max="15"
-                    step="0.1"
-                    value={accelerationRange[1]}
-                    onChange={(e) =>
-                      setAccelerationRange([
-                        accelerationRange[0],
-                        +e.target.value,
-                      ])
-                    }
-                  />
-
                   {/* Transmission */}
                   <label>Transmission:</label>
                   {transmissions.map((t) => (

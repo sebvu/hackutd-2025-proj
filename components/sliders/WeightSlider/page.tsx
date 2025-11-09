@@ -1,51 +1,87 @@
 "use client";
 
-import { Range, getTrackBackground } from "react-range";
+import React from "react";
+import { Range } from "react-range";
 
-const STEP = 100;
-const MIN = 2000;
-const MAX = 10000;
+interface WeightSliderProps {
+  label?: string;
+  values: [number, number];
+  setValues: (values: [number, number]) => void;
+  min?: number;
+  max?: number;
+  step?: number;
+  unit?: string;
+  color?: string;
+}
 
-type WeightSliderProps = {
-    values: [number, number];
-    setValues: (values: [number, number]) => void;
-};
+export default function WeightSlider({
+  label = "Range",
+  values,
+  setValues,
+  min = 0,
+  max = 100,
+  step = 1,
+  unit = "",
+  color = "#ff4d4f", // 🔴 bright red default
+}: WeightSliderProps) {
+  // clamp to avoid React Range errors
+  const safeValues: [number, number] = [
+    Math.max(min, Math.min(max, values[0])),
+    Math.max(min, Math.min(max, values[1])),
+  ];
 
-export default function WeightSlider({ values, setValues }: WeightSliderProps) {
-    return (
-        <div className="price-slider"> {/* ✅ reuse same base styles */}
-        <label>Weight Range (kg):</label>
-        <Range
-            values={values}
-            step={STEP}
-            min={MIN}
-            max={MAX}
-            onChange={(vals) => setValues(vals as [number, number])}
-            renderTrack={({ props, children }) => (
-            <div
-                {...props}
-                className="slider-track"
-                style={{
-                background: getTrackBackground({
-                    values,
-                    colors: ["#ccc", "#EB0A1E", "#ccc"],
-                    min: MIN,
-                    max: MAX,
-                }),
-                }}
-            >
-                {children}
-            </div>
-            )}
-            renderThumb={({ props }) => {
-            const { key, ...restProps } = props;
-            return <div key={key} {...restProps} className="slider-thumb" />;
+  return (
+    <div className="price-slider">
+      {label && <label>{label}</label>}
+      <Range
+        values={safeValues}
+        step={step}
+        min={min}
+        max={max}
+        onChange={(vals) => setValues([vals[0], vals[1]])}
+        renderTrack={({ props, children }) => (
+          <div
+            ref={props.ref}
+            onMouseDown={props.onMouseDown}
+            onTouchStart={props.onTouchStart}
+            style={{
+              height: "6px",
+              width: "100%",
+              background: `linear-gradient(to right, #ccc ${((safeValues[0] - min) / (max - min)) * 100}%, ${color} ${((safeValues[0] - min) / (max - min)) * 100}%, ${color} ${((safeValues[1] - min) / (max - min)) * 100}%, #ccc ${((safeValues[1] - min) / (max - min)) * 100}%)`,
+              borderRadius: "4px",
             }}
-        />
-        <div className="slider-values">
-            <span>{values[0].toLocaleString()} kg</span>
-            <span>{values[1].toLocaleString()} kg</span>
-        </div>
-        </div>
-    );
+          >
+            {children}
+          </div>
+        )}
+        renderThumb={({ props, index }) => {
+          const { key, ...restProps } = props;
+          return (
+            <div
+              key={key ?? index}
+              {...restProps}
+              className="slider-thumb"
+              style={{
+                ...restProps.style,
+                height: "18px",
+                width: "18px",
+                backgroundColor: color,
+                borderRadius: "50%",
+                border: "2px solid #fff",
+                boxShadow: "0 0 4px rgba(0,0,0,0.3)",
+              }}
+            />
+          );
+        }}
+      />
+      <div className="slider-values">
+        <span>
+          {safeValues[0]} {unit}
+        </span>
+        <span>
+          {safeValues[1]} {unit}
+        </span>
+      </div>
+    </div>
+  );
 }
