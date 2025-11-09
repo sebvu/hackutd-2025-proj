@@ -1,19 +1,27 @@
 import { createServerClient } from "@supabase/ssr";
-import type { CookieOptions } from "@supabase/ssr";
+import { cookies } from "next/headers";
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-/**
- * Creates a Supabase server client safely for API routes or server actions.
- * No cookies() dependency (avoids runtime errors).
- */
 export function createServerSupabaseClient() {
-  const cookieOptions: CookieOptions = {
-    get: () => undefined,
-    set: () => {},
-    remove: () => {},
-  };
+  const cookieStore = cookies();
 
-  return createServerClient(url, anon, { cookies: cookieOptions });
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          // @ts-ignore 
+          return cookieStore.get(name)?.value;
+        },
+        set(name: string, value: string, options: any) {
+          // @ts-ignore
+          cookieStore.set({ name, value, ...options });
+        },
+        remove(name: string, options: any) {
+          // @ts-ignore
+          cookieStore.set({ name, value: "", ...options });
+        },
+      },
+    }
+  );
 }
