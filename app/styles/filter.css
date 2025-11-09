@@ -445,3 +445,126 @@
   transition: transform 0.2s ease;
 }
 
+.advanced-filters-container {
+  margin-top: 1rem;
+  border-top: 1px solid #ddd;
+  padding-top: 1rem;
+  transition: all 0.25s ease;
+}
+
+.advanced-filters-header {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.advanced-filters-header:hover {
+  border-color: #eb0a1e;
+  color: #eb0a1e;
+  box-shadow: 0 2px 5px rgba(235, 10, 30, 0.1);
+}
+
+/* Animated arrow icon */
+.advanced-filters-header .arrow {
+  font-size: 0.9rem;
+  transition: transform 0.25s ease, color 0.25s ease;
+  color: #888;
+}
+
+.advanced-filters-header:hover .arrow {
+  color: #eb0a1e;
+}
+
+.advanced-filters-header.open .arrow {
+  transform: rotate(180deg);
+  color: #eb0a1e;
+}
+
+/* Collapsible panel animation */
+.advanced-filters-menu {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.35s ease;
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+  padding: 0 1rem;
+}
+
+.advanced-filters-container.open .advanced-filters-menu {
+  max-height: 800px; /* enough space for all filters */
+  opacity: 1;
+  transform: translateY(0);
+  padding: 1rem;
+}
+
+/* Optional highlight when open */
+.advanced-filters-container.open {
+  border: 1px solid #eb0a1e;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(235, 10, 30, 0.1);
+  background-color: #fff;
+}
+
+/* Checkbox + range styling inside advanced section */
+.advanced-filters-menu label {
+  display: block;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 0.3rem;
+}
+
+.advanced-filters-menu input[type="checkbox"] {
+  margin-right: 0.4rem;
+  accent-color: #eb0a1e;
+  transform: scale(1.1);
+}
+
+.advanced-filters-menu input[type="range"] {
+  width: 100%;
+  accent-color: #eb0a1e;
+  cursor: pointer;
+  margin: 0.25rem 0;
+}
+
+/* Checkbox groups (e.g. transmissions, body types) */
+.advanced-filters-menu .checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+.advanced-filters-menu .checkbox-group label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.advanced-filters-menu .checkbox-group label:hover {
+  color: #eb0a1e;
+}
+
+/* Smooth fade/slide animation */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

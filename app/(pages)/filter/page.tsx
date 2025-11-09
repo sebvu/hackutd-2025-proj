@@ -27,32 +27,51 @@ export type Car = {
   all_wheel_drive?: boolean;
   price_min?: number;
   price_max?: number;
-  image?: string; 
-};
-
-type StarRatingProps = {
-  rating: number;
+  image?: string;
 };
 
 export default function Filter() {
   const [carsData, setCarsData] = useState<Car[]>([]);
-  const carModels: string[] = Array.from(
-    new Set(carsData.map(car => car.model).filter((m): m is string => !!m))
-  );
-
   const [loading, setLoading] = useState(true);
-
   const [searchTerm, setSearchTerm] = useState("");
+
+  // Existing filters
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [priceRange, setPriceRange] = useState<[number, number]>([20000, 100000]);
-  const [weightRange, setWeightRange] = useState<[number, number]>([2000, 10000]);
-  const [horsePowerRange, setHorsePowerRange] = useState<[number, number]>([100, 600]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([
+    20000, 100000,
+  ]);
+  const [weightRange, setWeightRange] = useState<[number, number]>([
+    2000, 10000,
+  ]);
+  const [horsePowerRange, setHorsePowerRange] = useState<[number, number]>([
+    100, 600,
+  ]);
   const [selectedFuelTypes, setSelectedFuelTypes] = useState<string[]>([]);
   const [ratingSort, setRatingSort] = useState<"asc" | "desc" | null>("desc");
-  const [priceSort, setPriceSort] = useState<"asc" | "desc" | null>();
-  const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [priceSort, setPriceSort] = useState<"asc" | "desc" | null>(null);
 
+  // 🔹 NEW: Advanced filter states
+  const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [torqueRange, setTorqueRange] = useState<[number, number]>([100, 500]);
+  const [mileageCityRange, setMileageCityRange] = useState<[number, number]>([
+    10, 150,
+  ]);
+  const [mileageHighwayRange, setMileageHighwayRange] = useState<
+    [number, number]
+  >([10, 150]);
+  const [tankSizeRange, setTankSizeRange] = useState<[number, number]>([0, 30]);
+  const [accelerationRange, setAccelerationRange] = useState<[number, number]>([
+    0, 15,
+  ]);
+  const [selectedTransmission, setSelectedTransmission] = useState<string[]>(
+    [],
+  );
+  const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
+  const [selectedBodyTypes, setSelectedBodyTypes] = useState<string[]>([]);
+  const [awdrFilter, setAwdrFilter] = useState<boolean | null>(null);
+
+  // Modal for viewing cars
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
 
@@ -60,11 +79,10 @@ export default function Filter() {
     async function fetchCars() {
       setLoading(true);
       try {
-        const response = await fetch('/api/getAllVehicles');
-        if (!response.ok) {
+        const response = await fetch("/api/getAllVehicles");
+        if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const cars: Car[] = await response.json(); 
+        const cars: Car[] = await response.json();
         setCarsData(cars);
       } catch (error) {
         console.error("Error fetching vehicles:", error);
@@ -75,88 +93,148 @@ export default function Filter() {
     fetchCars();
   }, []);
 
+  const carModels = Array.from(
+    new Set(carsData.map((car) => car.model).filter(Boolean)),
+  ) as string[];
+  const fuelTypes = Array.from(
+    new Set(carsData.map((car) => car.fuel_type).filter(Boolean)),
+  ) as string[];
+  const transmissions = Array.from(
+    new Set(carsData.map((car) => car.transmission_type).filter(Boolean)),
+  ) as string[];
+  const bodyTypes = Array.from(
+    new Set(carsData.map((car) => car.body_type).filter(Boolean)),
+  ) as string[];
+  const seatOptions = Array.from(
+    new Set(carsData.map((car) => car.seats).filter(Boolean)),
+  ) as number[];
+
+  // UI helpers
+  function toggleModel(model: string) {
+    setSelectedModels((prev) =>
+      prev.includes(model) ? prev.filter((m) => m !== model) : [...prev, model],
+    );
+  }
+  function toggleFuelType(fuel: string) {
+    setSelectedFuelTypes((prev) =>
+      prev.includes(fuel) ? prev.filter((f) => f !== fuel) : [...prev, fuel],
+    );
+  }
+  function toggleTransmission(t: string) {
+    setSelectedTransmission((prev) =>
+      prev.includes(t) ? prev.filter((f) => f !== t) : [...prev, t],
+    );
+  }
+  function toggleBodyType(b: string) {
+    setSelectedBodyTypes((prev) =>
+      prev.includes(b) ? prev.filter((f) => f !== b) : [...prev, b],
+    );
+  }
+  function toggleSeats(s: number) {
+    setSelectedSeats((prev) =>
+      prev.includes(s) ? prev.filter((f) => f !== s) : [...prev, s],
+    );
+  }
+
   function openModal(car: Car) {
     setSelectedCar(car);
     setModalOpen(true);
   }
-
   function closeModal() {
     setModalOpen(false);
     setSelectedCar(null);
   }
 
-  function toggleModel(model: string) {
-    setSelectedModels((prev) =>
-      prev.includes(model) ? prev.filter((m) => m !== model) : [...prev, model]
-    );
-  }
-
-  const toggleFuelType = (fuel: string) => {
-    setSelectedFuelTypes((prev) =>
-      prev.includes(fuel) ? prev.filter((f) => f !== fuel) : [...prev, fuel]
-    );
-  };
-
-  function StarRating({ rating }: StarRatingProps) {
-    const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 >= 0.5 ? 1 : 0;
-    const emptyStars = 5 - fullStars - halfStar;
-
-    return (
-      <div className="rating-stars">
-        {"★".repeat(fullStars)}
-        {halfStar ? "⯨" : ""}
-        {"☆".repeat(emptyStars)}
-      </div>
-    );
-  }
-
-  function parsePrice(price: string) {
-    return Number(price.replace(/[^0-9.-]+/g, ""));
-  }
-
   if (loading) return <p>Loading vehicles...</p>;
 
-  let filteredCars = selectedModels.length
-  ? carsData.filter((car) => car.model && selectedModels.includes(car.model))
-  : carsData;
+  // 🔹 Filtering Logic
+  let filteredCars = carsData.filter((car) => {
+    const matchesSearch = searchTerm
+      ? car.model?.toLowerCase().includes(searchTerm.toLowerCase())
+      : true;
 
+    const matchesModel =
+      selectedModels.length === 0 || selectedModels.includes(car.model ?? "");
 
-  if (searchTerm.trim() !== "") {
-    const term = searchTerm.toLowerCase();
-    filteredCars = filteredCars.filter(
-      (car) =>
-        car.model?.toLowerCase().includes(term)
+    const matchesFuel =
+      selectedFuelTypes.length === 0 ||
+      selectedFuelTypes.includes(car.fuel_type ?? "");
+
+    const matchesBody =
+      selectedBodyTypes.length === 0 ||
+      selectedBodyTypes.includes(car.body_type ?? "");
+
+    const matchesTransmission =
+      selectedTransmission.length === 0 ||
+      selectedTransmission.includes(car.transmission_type ?? "");
+
+    const matchesSeats =
+      selectedSeats.length === 0 || selectedSeats.includes(car.seats ?? 0);
+
+    const matchesAWD =
+      awdrFilter === null || car.all_wheel_drive === awdrFilter;
+
+    const priceOK =
+      (car.price_min ?? 0) <= priceRange[1] &&
+      (car.price_max ?? Infinity) >= priceRange[0];
+
+    const weightOK =
+      (car.weight ?? 0) >= weightRange[0] &&
+      (car.weight ?? 0) <= weightRange[1];
+
+    const hpOK =
+      (car.horsepower ?? 0) >= horsePowerRange[0] &&
+      (car.horsepower ?? 0) <= horsePowerRange[1];
+
+    const torqueOK =
+      (car.torque ?? 0) >= torqueRange[0] &&
+      (car.torque ?? 0) <= torqueRange[1];
+
+    const mileageCityOK =
+      (car.mileage_city ?? 0) >= mileageCityRange[0] &&
+      (car.mileage_city ?? 0) <= mileageCityRange[1];
+
+    const mileageHwyOK =
+      (car.mileage_highway ?? 0) >= mileageHighwayRange[0] &&
+      (car.mileage_highway ?? 0) <= mileageHighwayRange[1];
+
+    const tankOK =
+      (car.tank_size ?? 0) >= tankSizeRange[0] &&
+      (car.tank_size ?? 0) <= tankSizeRange[1];
+
+    const accelOK =
+      (car.acceleration ?? 0) >= accelerationRange[0] &&
+      (car.acceleration ?? 0) <= accelerationRange[1];
+
+    return (
+      matchesSearch &&
+      matchesModel &&
+      matchesFuel &&
+      matchesBody &&
+      matchesTransmission &&
+      matchesSeats &&
+      matchesAWD &&
+      priceOK &&
+      weightOK &&
+      hpOK &&
+      torqueOK &&
+      mileageCityOK &&
+      mileageHwyOK &&
+      tankOK &&
+      accelOK
     );
-  }
-
-  filteredCars = filteredCars.filter((car) => {
-    const carMin = car.price_min ?? 0;      
-    const carMax = car.price_max ?? Infinity; 
-    const [selectedMin, selectedMax] = priceRange;
-    return carMax >= selectedMin && carMin <= selectedMax;
   });
 
-
+  // Optional sorting
   filteredCars = [...filteredCars].sort((a, b) => {
     if (priceSort) {
-      const aMin = a.price_min ?? 0;       // fallback to 0 if undefined
-      const bMin = b.price_min ?? 0;       // fallback to 0 if undefined
-      const priceDiff = aMin - bMin;
-      if (priceDiff !== 0) return priceSort === "asc" ? priceDiff : -priceDiff;
+      const diff = (a.price_min ?? 0) - (b.price_min ?? 0);
+      return priceSort === "asc" ? diff : -diff;
     }
-
-    // if (ratingSort) {
-    //   const aRating = a.rating ?? 0;       // fallback to 0 if undefined
-    //   const bRating = b.rating ?? 0;
-    //   const ratingDiff = aRating - bRating;
-    //   if (ratingDiff !== 0) return ratingSort === "asc" ? ratingDiff : -ratingDiff;
-    // }
-
     return 0;
   });
 
-
+  // 🔹 UI Rendering
   return (
     <div className="filter-page">
       <div className="search-bar">
@@ -172,192 +250,376 @@ export default function Filter() {
         <div className="filters">
           <h3>Filters</h3>
 
+          {/* Base Filters */}
           <div className="dropdown-container">
             <label>Model:</label>
-            <div className="dropdown">
-              <div
-                className="dropdown-selected"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setDropdownOpen(!dropdownOpen);
-                }}
-              >
-                {selectedModels.length > 0
-                  ? selectedModels.join(", ")
-                  : "Select models"}
-                <span className="arrow">{dropdownOpen ? "▲" : "▼"}</span>
-              </div>
-
-              {dropdownOpen && (
-                <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
-                  {carModels.map((model) => (
-                    <label key={model} className="dropdown-option">
-                      <input
-                        type="checkbox"
-                        checked={selectedModels.includes(model)}
-                        onChange={() => toggleModel(model)}
-                      />
-                      {model}
-                    </label>
-                  ))}
-                </div>
-              )}
-
-              <PriceSlider values={priceRange} setValues={setPriceRange} />
-
-              <div className="sort-container">
-                <label>Sort by Rating:</label>
-                <div className="sort-buttons">
-                  <button
-                    className={ratingSort === "asc" ? "active" : ""}
-                    onClick={() =>
-                      setRatingSort(ratingSort === "asc" ? null : "asc")
-                    }
-                  >
-                    ↑ Asc
-                  </button>
-                  <button
-                    className={ratingSort === "desc" ? "active" : ""}
-                    onClick={() =>
-                      setRatingSort(ratingSort === "desc" ? null : "desc")
-                    }
-                  >
-                    ↓ Desc
-                  </button>
-                </div>
-
-                <label>Sort by Price:</label>
-                <div className="sort-buttons">
-                  <button
-                    className={priceSort === "asc" ? "active" : ""}
-                    onClick={() => setPriceSort(priceSort === "asc" ? null : "asc")}
-                  >
-                    ↑ Asc
-                  </button>
-                  <button
-                    className={priceSort === "desc" ? "active" : ""}
-                    onClick={() =>
-                      setPriceSort(priceSort === "desc" ? null : "desc")
-                    }
-                  >
-                    ↓ Desc
-                  </button>
-                </div>
-              </div>
+            <div
+              className="dropdown-selected"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            >
+              {selectedModels.length > 0
+                ? selectedModels.join(", ")
+                : "Select models"}
+              <span className="arrow">{dropdownOpen ? "▲" : "▼"}</span>
             </div>
-
-            <div className="advanced-filters-container">
-              <div
-                className="advanced-filters-header"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setAdvancedOpen(!advancedOpen);
-                }}
-              >
-                <span>Advanced Filters</span>
-                <span className="arrow">{advancedOpen ? "▲" : "▼"}</span>
-              </div>
-
-              {advancedOpen && (
-                <div
-                  className="advanced-filters-menu"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="filter-group">
-                    <WeightSlider values={weightRange} setValues={setWeightRange} />
-                  </div>
-
-                  <div className="filter-group">
-                    <HorsePowerSlider
-                      values={horsePowerRange}
-                      setValues={setHorsePowerRange}
+            {dropdownOpen && (
+              <div className="dropdown-menu">
+                {carModels.map((model) => (
+                  <label key={model} className="dropdown-option">
+                    <input
+                      type="checkbox"
+                      checked={selectedModels.includes(model)}
+                      onChange={() => toggleModel(model)}
                     />
-                  </div>
+                    {model}
+                  </label>
+                ))}
+              </div>
+            )}
 
-                  <div className="filter-group">
-                    <label>Fuel Type:</label>
-                    <div className="fuel-options">
-                      {["Gasoline", "Electric", "Hybrid"].map((fuel) => (
-                        <label key={fuel} className="fuel-option">
-                          <input
-                            type="checkbox"
-                            checked={selectedFuelTypes.includes(fuel)}
-                            onChange={() => toggleFuelType(fuel)}
-                          />
-                          {fuel}
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+            <PriceSlider values={priceRange} setValues={setPriceRange} />
+            <WeightSlider values={weightRange} setValues={setWeightRange} />
+            <HorsePowerSlider
+              values={horsePowerRange}
+              setValues={setHorsePowerRange}
+            />
 
-            <div className="clear-button">
-              <button
-                onClick={() => {
-                  setSelectedModels([]);
-                  setPriceRange([20000, 50000]);
-                  setRatingSort(null);
-                  setPriceSort(null);
-                  setSearchTerm("");
-                }}
-              >
-                Clear All
-              </button>
+            {/* Sort Controls */}
+            <div className="sort-container">
+              <label>Sort by Price:</label>
+              <div className="sort-buttons">
+                <button
+                  className={priceSort === "asc" ? "active" : ""}
+                  onClick={() =>
+                    setPriceSort(priceSort === "asc" ? null : "asc")
+                  }
+                >
+                  ↑ Asc
+                </button>
+                <button
+                  className={priceSort === "desc" ? "active" : ""}
+                  onClick={() =>
+                    setPriceSort(priceSort === "desc" ? null : "desc")
+                  }
+                >
+                  ↓ Desc
+                </button>
+              </div>
             </div>
           </div>
+
+          {/* Advanced Filters */}
+          <div className="advanced-filters-container">
+            <div
+              className={`advanced-filters-header ${advancedOpen ? "open" : ""}`}
+              onClick={() => setAdvancedOpen(!advancedOpen)}
+            >
+              <span>Advanced Filters</span>
+              <span className="arrow">{advancedOpen ? "▲" : "▼"}</span>
+            </div>
+
+            <div
+              className={`advanced-filters-container ${advancedOpen ? "open" : ""}`}
+            >
+              {advancedOpen && (
+                <div className="advanced-filters-menu">
+                  {/* Torque */}
+                  <label>Torque (Nm):</label>
+                  <input
+                    type="range"
+                    min="100"
+                    max="500"
+                    step="10"
+                    value={torqueRange[0]}
+                    onChange={(e) =>
+                      setTorqueRange([+e.target.value, torqueRange[1]])
+                    }
+                  />
+                  <input
+                    type="range"
+                    min="100"
+                    max="500"
+                    step="10"
+                    value={torqueRange[1]}
+                    onChange={(e) =>
+                      setTorqueRange([torqueRange[0], +e.target.value])
+                    }
+                  />
+
+                  {/* City Mileage */}
+                  <label>City Mileage (MPG):</label>
+                  <input
+                    type="range"
+                    min="10"
+                    max="150"
+                    step="5"
+                    value={mileageCityRange[0]}
+                    onChange={(e) =>
+                      setMileageCityRange([
+                        +e.target.value,
+                        mileageCityRange[1],
+                      ])
+                    }
+                  />
+                  <input
+                    type="range"
+                    min="10"
+                    max="150"
+                    step="5"
+                    value={mileageCityRange[1]}
+                    onChange={(e) =>
+                      setMileageCityRange([
+                        mileageCityRange[0],
+                        +e.target.value,
+                      ])
+                    }
+                  />
+
+                  {/* Highway Mileage */}
+                  <label>Highway Mileage (MPG):</label>
+                  <input
+                    type="range"
+                    min="10"
+                    max="150"
+                    step="5"
+                    value={mileageHighwayRange[0]}
+                    onChange={(e) =>
+                      setMileageHighwayRange([
+                        +e.target.value,
+                        mileageHighwayRange[1],
+                      ])
+                    }
+                  />
+                  <input
+                    type="range"
+                    min="10"
+                    max="150"
+                    step="5"
+                    value={mileageHighwayRange[1]}
+                    onChange={(e) =>
+                      setMileageHighwayRange([
+                        mileageHighwayRange[0],
+                        +e.target.value,
+                      ])
+                    }
+                  />
+
+                  {/* Tank Size */}
+                  <label>Tank Size (L):</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="30"
+                    step="1"
+                    value={tankSizeRange[0]}
+                    onChange={(e) =>
+                      setTankSizeRange([+e.target.value, tankSizeRange[1]])
+                    }
+                  />
+                  <input
+                    type="range"
+                    min="0"
+                    max="30"
+                    step="1"
+                    value={tankSizeRange[1]}
+                    onChange={(e) =>
+                      setTankSizeRange([tankSizeRange[0], +e.target.value])
+                    }
+                  />
+
+                  {/* Acceleration */}
+                  <label>Acceleration (0–60s):</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="15"
+                    step="0.1"
+                    value={accelerationRange[0]}
+                    onChange={(e) =>
+                      setAccelerationRange([
+                        +e.target.value,
+                        accelerationRange[1],
+                      ])
+                    }
+                  />
+                  <input
+                    type="range"
+                    min="0"
+                    max="15"
+                    step="0.1"
+                    value={accelerationRange[1]}
+                    onChange={(e) =>
+                      setAccelerationRange([
+                        accelerationRange[0],
+                        +e.target.value,
+                      ])
+                    }
+                  />
+
+                  {/* Transmission */}
+                  <label>Transmission:</label>
+                  {transmissions.map((t) => (
+                    <label key={t}>
+                      <input
+                        type="checkbox"
+                        checked={selectedTransmission.includes(t)}
+                        onChange={() => toggleTransmission(t)}
+                      />
+                      {t}
+                    </label>
+                  ))}
+
+                  {/* Body Type */}
+                  <label>Body Type:</label>
+                  {bodyTypes.map((b) => (
+                    <label key={b}>
+                      <input
+                        type="checkbox"
+                        checked={selectedBodyTypes.includes(b)}
+                        onChange={() => toggleBodyType(b)}
+                      />
+                      {b}
+                    </label>
+                  ))}
+
+                  {/* Seats */}
+                  <label>Seats:</label>
+                  {seatOptions.map((s) => (
+                    <label key={s}>
+                      <input
+                        type="checkbox"
+                        checked={selectedSeats.includes(s)}
+                        onChange={() => toggleSeats(s)}
+                      />
+                      {s}
+                    </label>
+                  ))}
+
+                  {/* AWD */}
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={awdrFilter === true}
+                      onChange={() =>
+                        setAwdrFilter(awdrFilter === true ? null : true)
+                      }
+                    />
+                    AWD Only
+                  </label>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Clear Filters */}
+          <button
+            className="clear-button"
+            onClick={() => {
+              setSelectedModels([]);
+              setPriceRange([20000, 100000]);
+              setWeightRange([2000, 10000]);
+              setHorsePowerRange([100, 600]);
+              setSelectedFuelTypes([]);
+              setSelectedTransmission([]);
+              setSelectedSeats([]);
+              setSelectedBodyTypes([]);
+              setAwdrFilter(null);
+              setSearchTerm("");
+            }}
+          >
+            Clear All
+          </button>
         </div>
 
+        {/* Car results */}
         <div className="cars-container">
-          <span className="searches-found">Searches found: {filteredCars.length}</span>
+          <span className="searches-found">
+            Cars found: {filteredCars.length}
+          </span>
 
-          {filteredCars.map((car, index) => (
-            <div key={index} className="car-card" onClick={() => openModal(car)}>
+          {filteredCars.map((car) => (
+            <div
+              key={car.car_id}
+              className="car-card"
+              onClick={() => openModal(car)}
+            >
               <div className="car-details">
                 <div className="car-info">
                   <h2>{car.model} 2026</h2>
-                  <p>{car.price_min} - {car.price_max}</p>
+                  <p>
+                    ${car.price_min?.toLocaleString()} - $
+                    {car.price_max?.toLocaleString()}
+                  </p>
+                  <p>{car.body_type}</p>
                 </div>
-                {/* <div className="rating">
-                  <StarRating rating={car.rating} /> {car.rating}
-                </div> */}
                 <img src={HighLander.src} alt="car" className="car-image" />
               </div>
             </div>
           ))}
         </div>
 
+        {/* Modal */}
         {modalOpen && selectedCar && (
           <div className="modal-overlay" onClick={closeModal}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <button className="modal-close" onClick={closeModal}>×</button>
+              <button className="modal-close" onClick={closeModal}>
+                ×
+              </button>
               <div className="modal-header">
                 <h2>{selectedCar.model} 2026</h2>
-                <p>{selectedCar.price_min} - {selectedCar.price_max}</p>
+                <p>
+                  ${selectedCar.price_min} - ${selectedCar.price_max}
+                </p>
               </div>
               <div className="modal-body-container">
                 <div className="modal-body-text">
                   <ul className="car-details-list">
-                    <li><strong>Body Type:</strong> {selectedCar.body_type}</li>
-                    <li><strong>Fuel Type:</strong> {selectedCar.fuel_type}</li>
-                    <li><strong>Horsepower:</strong> {selectedCar.horsepower} hp</li>
-                    <li><strong>Torque:</strong> {selectedCar.torque} Nm</li>
-                    <li><strong>City Mileage:</strong> {selectedCar.mileage_city} mpg</li>
-                    <li><strong>Highway Mileage:</strong> {selectedCar.mileage_highway} mpg</li>
-                    <li><strong>Tank Size:</strong> {selectedCar.tank_size} L</li>
-                    <li><strong>0-60 mph:</strong> {selectedCar.acceleration} sec</li>
-                    <li><strong>Seats:</strong> {selectedCar.seats}</li>
+                    <li>
+                      <strong>Body Type:</strong> {selectedCar.body_type}
+                    </li>
+                    <li>
+                      <strong>Fuel Type:</strong> {selectedCar.fuel_type}
+                    </li>
+                    <li>
+                      <strong>Horsepower:</strong> {selectedCar.horsepower} hp
+                    </li>
+                    <li>
+                      <strong>Torque:</strong> {selectedCar.torque} Nm
+                    </li>
+                    <li>
+                      <strong>City Mileage:</strong> {selectedCar.mileage_city}{" "}
+                      mpg
+                    </li>
+                    <li>
+                      <strong>Highway Mileage:</strong>{" "}
+                      {selectedCar.mileage_highway} mpg
+                    </li>
+                    <li>
+                      <strong>Tank Size:</strong> {selectedCar.tank_size} L
+                    </li>
+                    <li>
+                      <strong>0-60 mph:</strong> {selectedCar.acceleration} s
+                    </li>
+                    <li>
+                      <strong>Seats:</strong> {selectedCar.seats}
+                    </li>
+                    <li>
+                      <strong>Transmission:</strong>{" "}
+                      {selectedCar.transmission_type}
+                    </li>
+                    <li>
+                      <strong>AWD:</strong>{" "}
+                      {selectedCar.all_wheel_drive ? "Yes" : "No"}
+                    </li>
                   </ul>
-                </div>
-                <div className="modal-body-image">
-                  <img src={HighLander.src} alt="car" className="car-image" />
                 </div>
               </div>
             </div>
           </div>
         )}
       </div>
+
+      {/* Chatbot bubble */}
       <ChatbotBubble />
     </div>
   );
