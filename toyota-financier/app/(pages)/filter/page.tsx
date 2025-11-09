@@ -1,58 +1,133 @@
-import React from "react";
+"use client";
 
-const carsData = [
-  { model: "Corolla", year: 2021, min_price: "$20,000", max_price: "$25,000", rating: 4.5 },
-  { model: "Camry", year: 2022, min_price: "$24,000", max_price: "$30,000", rating: 4.7 },
-  { model: "RAV4", year: 2020, min_price: "$26,000", max_price: "$32,000", rating: 4.6 },
-  { model: "Highlander", year: 2021, min_price: "$35,000", max_price: "$42,000", rating: 4.8 },
-  { model: "Highlander", year: 2021, min_price: "$35,000", max_price: "$42,000", rating: 4.8 },
-  { model: "Highlander", year: 2021, min_price: "$35,000", max_price: "$42,000", rating: 4.8 },
-  { model: "Highlander", year: 2021, min_price: "$35,000", max_price: "$42,000", rating: 4.8 },
-  { model: "Highlander", year: 2021, min_price: "$35,000", max_price: "$42,000", rating: 4.8 },
+import { useState } from "react";
+import PriceSlider from "../(slider)/page";
+
+type Car = {
+    model: string;
+    year: number;
+    min_price: string;
+    max_price: string;
+    rating: number;
+    image?: string;
+};
+
+type StarRatingProps = {
+    rating: number;
+};
+
+const carsData: Car[] = [
+    { model: "Corolla", year: 2021, min_price: "$20,000", max_price: "$25,000", rating: 4.5 },
+    { model: "Camry", year: 2022, min_price: "$24,000", max_price: "$30,000", rating: 4.7 },
+    { model: "RAV4", year: 2020, min_price: "$26,000", max_price: "$32,000", rating: 4.6 },
+    { model: "Highlander", year: 2021, min_price: "$35,000", max_price: "$42,000", rating: 4.8 },
+    { model: "Highlander", year: 2021, min_price: "$35,000", max_price: "$42,000", rating: 3.2 },
+];
+
+const carModels = [
+    "Camry","Corolla","Crown","bZ","C-HR","CorollaCross","RAV4",
+    "GrandHighlander","Highlander","LandCruiser","Sequoia","4Runner",
+    "Tacoma","Tundra","GR86","GRSupra","Prius"
 ];
 
 export default function Filter() {
-  return (
-    <div className="filter-page">
-      <div className="search-bar">
-        <input type="text" placeholder="Search by model/year..." />
-        <span>searches found: 50</span>
-      </div>
+    const [selectedModels, setSelectedModels] = useState<string[]>([]);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
-      <div className="main-content">
-        <div className="filters">
-          <h3>Filters</h3>
-          <div>
-            <label>Year:</label>
-            <select>
-              <option value="">Any</option>
-              <option value="2022">2022</option>
-              <option value="2021">2021</option>
-              <option value="2020">2020</option>
-            </select>
-          </div>
-          <div>
-            <label>Price Range:</label>
-            <select>
-              <option value="">Any</option>
-              <option value="20000-25000">$20k-$25k</option>
-              <option value="25000-30000">$25k-$30k</option>
-              <option value="30000-40000">$30k-$40k</option>
-            </select>
-          </div>
-        </div>
+    function toggleDropdown() {
+        setDropdownOpen(!dropdownOpen);
+    }
 
-        {/* Right: Car cards */}
-        <div className="cars-container">
-          {carsData.map((car, index) => (
-            <div key={index} className="car-card">
-              <h2>{car.model} {car.year}</h2>
-              <p>{car.min_price} - {car.max_price}</p>
-              <p>Rating: {car.rating}</p>
+    function toggleModel(model: string) {
+        setSelectedModels(prev =>
+            prev.includes(model)
+                ? prev.filter(m => m !== model)
+                : [...prev, model]
+        );
+    }
+
+    function StarRating({ rating }: StarRatingProps) {
+        const fullStars = Math.floor(rating);
+        const halfStar = rating % 1 >= 0.5 ? 1 : 0;
+        const emptyStars = 5 - fullStars - halfStar;
+
+        return (
+            <div className="rating-stars">
+                {"★".repeat(fullStars)}
+                {halfStar ? "⯨" : ""}
+                {"☆".repeat(emptyStars)}
             </div>
-          ))}
+        );
+    }
+
+    const filteredCars = selectedModels.length
+        ? carsData.filter(car => selectedModels.includes(car.model))
+        : carsData;
+
+    return (
+        <div className="filter-page">
+            <div className="search-bar">
+                <input type="text" placeholder="Search by model/year..." />
+                <span>Searches found: 50</span>
+            </div>
+
+            <div className="main-content">
+                <div className="filters">
+                    <h3>Filters</h3>
+
+                    <div className="dropdown-container">
+                        <label>Model:</label>
+                        <div className="dropdown">
+                            <div
+                                className="dropdown-selected"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setDropdownOpen(!dropdownOpen);
+                                }}
+                            >
+                                {selectedModels.length > 0 ? selectedModels.join(", ") : "Select models"}
+                                <span className="arrow">{dropdownOpen ? "▲" : "▼"}</span>
+                            </div>
+
+                            {dropdownOpen && (
+                                <div
+                                    className="dropdown-menu"
+                                    onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
+                                >
+                                    {carModels.map(model => (
+                                        <label key={model} className="dropdown-option">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedModels.includes(model)}
+                                                onChange={() => toggleModel(model)}
+                                            />
+                                            {model}
+                                        </label>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <PriceSlider />
+                </div>
+
+                <div className="cars-container">
+                    {filteredCars.map((car, index) => (
+                        <div key={index} className="car-card">
+                            <div className="car-details">
+                                <div className="car-info">
+                                    <h2>{car.model} {car.year}</h2>
+                                    <p>{car.min_price} - {car.max_price}</p>
+                                </div>
+                                <div className="rating">
+                                    <StarRating rating={car.rating} /> {car.rating}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
