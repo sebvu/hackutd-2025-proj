@@ -90,13 +90,11 @@
   border: 1px solid var(--primary-gray);
 }
 
-/* Dropdown container */
 .dropdown-container {
     position: relative;
     margin-bottom: 20px;
 }
 
-/* Dropdown box (clickable area) */
 .dropdown {
     position: relative;
     user-select: none;
@@ -116,7 +114,6 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Hover and active states */
 .dropdown-selected:hover {
     border-color: var(--primary-red);
     box-shadow: 0 0 5px rgba(235, 10, 30, 0.2);
@@ -127,14 +124,12 @@
     box-shadow: 0 0 8px rgba(235, 10, 30, 0.3);
 }
 
-/* Dropdown arrow */
 .dropdown-selected .arrow {
     margin-left: 8px;
     color: var(--primary-gray);
     font-size: 14px;
 }
 
-/* Dropdown menu (options list) */
 .dropdown-menu {
   position: absolute;
   background: white;
@@ -146,7 +141,6 @@
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-/* Individual option */
 .dropdown-option {
     display: flex;
     align-items: center;
@@ -158,18 +152,15 @@
     transition: background-color 0.2s ease;
 }
 
-/* Hover effect on each option */
 .dropdown-option:hover {
     background-color: rgba(235, 10, 30, 0.1);
 }
 
-/* Checkbox style */
 .dropdown-option input[type="checkbox"] {
     accent-color: var(--primary-red);
     cursor: pointer;
 }
 
-/* Sort container styling */
 .sort-container {
   margin-bottom: 20px;
 }
@@ -211,7 +202,6 @@
   border-color: var(--primary-red);
 }
 
-/* Cars container */
 .cars-container {
   flex: 1;
   background-color: #fff;
@@ -235,7 +225,7 @@
   border-radius: 10px;
   padding: 15px;
   margin-bottom: 15px;
-  cursor: pointer; /* makes it clear it's clickable */
+  cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
@@ -245,14 +235,12 @@
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
-/* Car details layout */
 .car-details {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* Car title and info */
 .car-info h2 {
   margin: 0;
   font-size: 25px;
@@ -266,7 +254,6 @@
   color: var(--primary-gray);
 }
 
-/* Rating on the right side */
 .rating {
   display: flex;
   align-items: center;
@@ -308,26 +295,23 @@
 }
 
 .clear-button:active {
-    background-color: #c70b16; /* Slightly darker red on click */
+    background-color: #c70b16;
     transform: scale(0.98);
 }
 
-/* Container for modal content (text + image) */
 .modal-body-container {
   display: flex;
-  gap: 20px;           /* Space between text and image */
-  flex-wrap: wrap;      /* Wrap on smaller screens */
-  align-items: flex-start; /* Align top of text and image */
-  margin-top: 20px;    /* Optional spacing from header */
+  gap: 20px;           
+  flex-wrap: wrap;    
+  align-items: flex-start; 
+  margin-top: 20px;  
 }
 
-/* Text/details section */
 .modal-body-text {
-  flex: 1 1 60%;       /* Take 60% of width, but shrink if needed */
-  min-width: 250px;    /* Prevent too narrow on small screens */
+  flex: 1 1 60%;     
+  min-width: 250px; 
 }
 
-/* Details list styling */
 .car-details-list {
   list-style: none;
   padding: 0;
@@ -340,12 +324,11 @@
 }
 
 .car-details-list li strong {
-  width: 130px;         /* Fixed width for labels */
+  width: 130px;    
   display: inline-block;
   color: var(--primary-gray);
 }
 
-/* Overlay for the modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -359,7 +342,6 @@
   z-index: 1000;
 }
 
-/* Modal content container */
 .modal-content {
   background-color: #fff;
   border-radius: 10px;
@@ -372,7 +354,6 @@
   box-shadow: 0 10px 25px rgba(0,0,0,0.3);
 }
 
-/* Close button */
 .modal-close {
   position: absolute;
   top: 10px;
@@ -383,11 +364,10 @@
   cursor: pointer;
 }
 
-/* Modal header */
 .modal-header h2 {
   margin: 0;
   font-size: 1.8rem;
-  color: var(--primary-red); /* Model + Year in red */
+  color: var(--primary-red);
 }
 
 .modal-header p {
@@ -395,24 +375,21 @@
   color: var(--primary-gray);
 }
 
-/* Container for body (details + image) */
 .modal-body-container {
   display: flex;
   gap: 20px;
-  align-items: stretch; /* Make both sides take full height */
+  align-items: stretch;
   margin-top: 20px;
-  min-height: 300px; /* ensures modal has some height if image is small */
+  min-height: 300px; 
 }
 
-/* Text/details section */
 .modal-body-text {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* vertically center content if needed */
+  justify-content: center; 
 }
 
-/* Details list styling */
 .car-details-list {
   list-style: none;
   padding: 0;
@@ -430,7 +407,6 @@
   color: var(--primary-gray);
 }
 
-/* Image section */
 .modal-body-image {
   display: flex;
   justify-content: center;
@@ -475,7 +451,6 @@
   box-shadow: 0 2px 5px rgba(235, 10, 30, 0.1);
 }
 
-/* Animated arrow icon */
 .advanced-filters-header .arrow {
   font-size: 0.9rem;
   transition: transform 0.25s ease, color 0.25s ease;
@@ -491,7 +466,6 @@
   color: #eb0a1e;
 }
 
-/* Collapsible panel animation */
 .advanced-filters-menu {
   overflow: hidden;
   max-height: 0;
@@ -507,13 +481,12 @@
 }
 
 .advanced-filters-container.open .advanced-filters-menu {
-  max-height: 800px; /* enough space for all filters */
+  max-height: 800px;
   opacity: 1;
   transform: translateY(0);
   padding: 1rem;
 }
 
-/* Optional highlight when open */
 .advanced-filters-container.open {
   border: 1px solid #eb0a1e;
   border-radius: 8px;
@@ -523,7 +496,6 @@
   overflow: visible;
 }
 
-/* Checkbox + range styling inside advanced section */
 .advanced-filters-menu label {
   display: block;
   font-weight: 500;
@@ -544,7 +516,6 @@
   margin: 0.25rem 0;
 }
 
-/* Checkbox groups (e.g. transmissions, body types) */
 .advanced-filters-menu .checkbox-group {
   display: flex;
   flex-wrap: wrap;
@@ -563,7 +534,6 @@
   color: #eb0a1e;
 }
 
-/* Smooth fade/slide animation */
 @keyframes slideDown {
   from {
     opacity: 0;
