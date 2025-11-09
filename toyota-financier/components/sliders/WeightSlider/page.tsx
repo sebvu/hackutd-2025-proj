@@ -1,26 +1,26 @@
-"use client"
+"use client";
 
 import { Range, getTrackBackground } from "react-range";
 
-const STEP = 500;
-const MIN = 20000;
-const MAX = 50000;
+const STEP = 100;
+const MIN = 2000;
+const MAX = 10000;
 
-type PriceSliderProps = {
+type WeightSliderProps = {
     values: [number, number];
     setValues: (values: [number, number]) => void;
 };
 
-export default function PriceSlider({ values, setValues }: PriceSliderProps) {
+export default function WeightSlider({ values, setValues }: WeightSliderProps) {
     return (
-        <div className="price-slider">
-        <label>Price Range:</label>
+        <div className="price-slider"> {/* ✅ reuse same base styles */}
+        <label>Weight Range (kg):</label>
         <Range
             values={values}
             step={STEP}
             min={MIN}
             max={MAX}
-            onChange={(vals) => setValues(vals as [number, number])} // ✅ cast here
+            onChange={(vals) => setValues(vals as [number, number])}
             renderTrack={({ props, children }) => (
             <div
                 {...props}
@@ -38,13 +38,13 @@ export default function PriceSlider({ values, setValues }: PriceSliderProps) {
             </div>
             )}
             renderThumb={({ props }) => {
-                const { key, ...restProps } = props;
-                return <div key={key} {...restProps} className="slider-thumb" />;
+            const { key, ...restProps } = props;
+            return <div key={key} {...restProps} className="slider-thumb" />;
             }}
         />
         <div className="slider-values">
-            <span>${values[0].toLocaleString()}</span>
-            <span>${values[1].toLocaleString()}</span>
+            <span>{values[0].toLocaleString()} kg</span>
+            <span>{values[1].toLocaleString()} kg</span>
         </div>
         </div>
     );
