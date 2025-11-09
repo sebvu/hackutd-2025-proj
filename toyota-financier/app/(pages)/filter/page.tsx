@@ -5,6 +5,10 @@ const carsData = [
   { model: "Camry", year: 2022, min_price: "$24,000", max_price: "$30,000", rating: 4.7 },
   { model: "RAV4", year: 2020, min_price: "$26,000", max_price: "$32,000", rating: 4.6 },
   { model: "Highlander", year: 2021, min_price: "$35,000", max_price: "$42,000", rating: 4.8 },
+  { model: "Highlander", year: 2021, min_price: "$35,000", max_price: "$42,000", rating: 4.8 },
+  { model: "Highlander", year: 2021, min_price: "$35,000", max_price: "$42,000", rating: 4.8 },
+  { model: "Highlander", year: 2021, min_price: "$35,000", max_price: "$42,000", rating: 4.8 },
+  { model: "Highlander", year: 2021, min_price: "$35,000", max_price: "$42,000", rating: 4.8 },
 ];
 
 export default function Filter() {
@@ -12,7 +16,7 @@ export default function Filter() {
     <div className="filter-page">
       <div className="search-bar">
         <input type="text" placeholder="Search by model/year..." />
-        <span># searches found: 50</span>
+        <span>searches found: 50</span>
       </div>
 
       <div className="main-content">
@@ -38,6 +42,7 @@ export default function Filter() {
           </div>
         </div>
 
+        {/* Right: Car cards */}
         <div className="cars-container">
           {carsData.map((car, index) => (
             <div key={index} className="car-card">
