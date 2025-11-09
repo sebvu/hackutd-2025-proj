@@ -15,13 +15,13 @@ interface WeightSliderProps {
 }
 
 export default function WeightSlider({
-  label = "Range",
+  label = "Weight",
   values,
   setValues,
   min = 0,
-  max = 100,
+  max = 10000,
   step = 1,
-  unit = "",
+  unit = "lbs",
   color = "#ff4d4f", // 🔴 bright red default
 }: WeightSliderProps) {
   // clamp to avoid React Range errors

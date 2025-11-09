@@ -41,9 +41,7 @@ export default function Filter() {
   const [priceRange, setPriceRange] = useState<[number, number]>([
     20000, 100000,
   ]);
-  const [weightRange, setWeightRange] = useState<[number, number]>([
-    2000, 10000,
-  ]);
+  const [weightRange, setWeightRange] = useState<[number, number]>([0, 10000]);
   const [horsePowerRange, setHorsePowerRange] = useState<[number, number]>([
     100, 600,
   ]);
@@ -53,19 +51,18 @@ export default function Filter() {
 
   // 🔹 NEW: Advanced filter states
   const [advancedOpen, setAdvancedOpen] = useState(false);
-  const [torqueRange, setTorqueRange] = useState<[number, number]>([100, 500]);
+  const [torqueRange, setTorqueRange] = useState<[number, number]>([100, 600]);
   const [mileageCityRange, setMileageCityRange] = useState<[number, number]>([
-    10, 60,
+    5, 150,
   ]);
   const [mileageHighwayRange, setMileageHighwayRange] = useState<
     [number, number]
-  >([15, 80]);
-  const [tankSizeRange, setTankSizeRange] = useState<[number, number]>([
-    20, 100,
-  ]);
+  >([5, 150]);
+  const [tankSizeRange, setTankSizeRange] = useState<[number, number]>([0, 35]);
   const [accelerationRange, setAccelerationRange] = useState<[number, number]>([
-    2, 15,
+    1, 15,
   ]);
+  const [seatRange, setSeatRange] = useState<[number, number]>([0, 15]);
   const [selectedTransmission, setSelectedTransmission] = useState<string[]>(
     [],
   );
@@ -170,8 +167,8 @@ export default function Filter() {
       selectedTransmission.length === 0 ||
       selectedTransmission.includes(car.transmission_type ?? "");
 
-    const matchesSeats =
-      selectedSeats.length === 0 || selectedSeats.includes(car.seats ?? 0);
+    const seatsOK =
+      (car.seats ?? 0) >= seatRange[0] && (car.seats ?? 0) <= seatRange[1];
 
     const matchesAWD =
       awdrFilter === null || car.all_wheel_drive === awdrFilter;
@@ -214,7 +211,7 @@ export default function Filter() {
       matchesFuel &&
       matchesBody &&
       matchesTransmission &&
-      matchesSeats &&
+      seatsOK &&
       matchesAWD &&
       priceOK &&
       weightOK &&
@@ -343,7 +340,7 @@ export default function Filter() {
                     values={mileageCityRange}
                     setValues={setMileageCityRange}
                     min={5}
-                    max={50}
+                    max={150}
                     step={1}
                     unit="MPG"
                     color="#ff4d4f"
@@ -355,7 +352,7 @@ export default function Filter() {
                     values={mileageHighwayRange}
                     setValues={setMileageHighwayRange}
                     min={5}
-                    max={50}
+                    max={150}
                     step={1}
                     unit="MPG"
                     color="#ff4d4f"
@@ -366,7 +363,7 @@ export default function Filter() {
                     label="Tank Size (L)"
                     values={tankSizeRange}
                     setValues={setTankSizeRange}
-                    min={10}
+                    min={0}
                     max={35}
                     step={1}
                     unit="L"
@@ -384,6 +381,33 @@ export default function Filter() {
                     unit="s"
                     color="#ff4d4f"
                   />
+
+                  {/* Seats Slider */}
+                  <WeightSlider
+                    label="Seats"
+                    values={seatRange}
+                    setValues={setSeatRange}
+                    min={0}
+                    max={15}
+                    step={1}
+                    unit=""
+                    color="#ff4d4f"
+                  />
+
+                  {/* AWD */}
+                  <div className="awd-toggle">
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={awdrFilter === true}
+                        onChange={() =>
+                          setAwdrFilter(awdrFilter === true ? null : true)
+                        }
+                      />
+                      All-Wheel Drive (AWD)
+                    </label>
+                  </div>
+
                   {/* Transmission */}
                   <label>Transmission:</label>
                   {transmissions.map((t) => (
@@ -409,31 +433,6 @@ export default function Filter() {
                       {b}
                     </label>
                   ))}
-
-                  {/* Seats */}
-                  <label>Seats:</label>
-                  {seatOptions.map((s) => (
-                    <label key={s}>
-                      <input
-                        type="checkbox"
-                        checked={selectedSeats.includes(s)}
-                        onChange={() => toggleSeats(s)}
-                      />
-                      {s}
-                    </label>
-                  ))}
-
-                  {/* AWD */}
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={awdrFilter === true}
-                      onChange={() =>
-                        setAwdrFilter(awdrFilter === true ? null : true)
-                      }
-                    />
-                    AWD Only
-                  </label>
                 </div>
               )}
             </div>
