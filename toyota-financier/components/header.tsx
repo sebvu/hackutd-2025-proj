@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import "@/app/styles/header.css";
 import logo from "@/public/toyota_logo.png";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 const Header: React.FC = () => {
   const { user, signOut, loading } = useAuth();

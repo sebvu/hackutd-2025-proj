@@ -17,8 +17,10 @@ export async function POST(req: Request) {
       },
     });
 
-    if (error)
+    if (error) {
       return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
     return NextResponse.json({ user: data.user }, { status: 200 });
   } catch (err) {
     console.error("Registration error:", err);
