@@ -137,3 +137,57 @@ clanker:
     bottom: 12px;
   }
 }
+
+
+.chatbot {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: white;
+  border: 2px solid #ff4d4f;
+  border-radius: 1rem;
+  width: 320px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.15);
+  font-family: sans-serif;
+}
+
+.chatbot-header {
+  background: #ff4d4f;
+  color: white;
+  padding: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.chatbot-body {
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+}
+
+.chatbot-messages {
+  flex: 1;
+  padding: 0.75rem;
+  overflow-y: auto;
+}
+
+.msg.user { text-align: right; color: #333; }
+.msg.ai { text-align: left; color: #ff4d4f; }
+
+.chatbot-input {
+  display: flex;
+  border-top: 1px solid #eee;
+}
+.chatbot-input input {
+  flex: 1;
+  border: none;
+  padding: 0.5rem;
+}
+.chatbot-input button {
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
