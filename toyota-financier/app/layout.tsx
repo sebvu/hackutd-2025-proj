@@ -5,6 +5,8 @@ import { AuthProvider } from "@/app/contexts/AuthContext";
 import "./styles/global.css";
 import "./styles/filter.css";
 import "./styles/slider.css";
+import "./styles/chatbot.css"
+import ChatbotBubble from "@/components/ChatbotBubble";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +34,7 @@ export default function RootLayout({
         <AuthProvider>
           <Header />
           <main>{children}</main>
+          <ChatbotBubble />
         </AuthProvider>
       </body>
     </html>
