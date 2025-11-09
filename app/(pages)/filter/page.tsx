@@ -548,6 +548,7 @@ export default function Filter() {
 
       {/* Chatbot bubble */}
       <ChatbotBubble
+        cars={carsData}
         onAIUpdate={(filters) => {
           if (filters.price) setPriceRange(filters.price);
           if (filters.horsepower) setHorsePowerRange(filters.horsepower);
