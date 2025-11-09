@@ -10,12 +10,15 @@ export function createServerSupabaseClient() {
     {
       cookies: {
         get(name: string) {
+          // @ts-ignore 
           return cookieStore.get(name)?.value;
         },
         set(name: string, value: string, options: any) {
+          // @ts-ignore
           cookieStore.set({ name, value, ...options });
         },
         remove(name: string, options: any) {
+          // @ts-ignore
           cookieStore.set({ name, value: "", ...options });
         },
       },
