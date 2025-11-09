@@ -1,0 +1,78 @@
+.car-card {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 0;
+    align-items: center;
+}
+
+.car-details  {
+    width: 90%;
+}
+
+.favorites-page {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    padding-top: 7rem;
+    overflow: hidden;
+}
+
+.unfavorite {
+    padding: 0;
+    margin-right: 2rem;
+    border: 0;
+    height: 64px;
+    width: 64px;
+}
+
+.unfavorite-modal-content {
+    background-color: #fff;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90%;
+    overflow-y: auto;
+    padding: 10vh;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 7vh;
+}
+
+.unfavorite-modal-message {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.unfavorite-modal-btns {
+    display: flex;
+    gap: 7vw;
+}
+
+.unfavorite-modal-btns button {
+    border-radius: 6px;
+    padding: .5rem 1.5rem;
+    font-size: 16px;
+}
+
+.unfavorite-cancel {
+    background-color: #ffffff;
+    color: #EB0A1E;
+}
+
+.unfavorite-cancel:hover {
+    background-color: rgba(0,0,0,0.2);
+}
+
+.unfavorite-confirm {
+    background-color: #EB0A1E;
+    color: hsl(220, 2%, 80%);
+}
+
+.unfavorite-confirm:hover {
+    background-color: hsl(355, 92%, 30%)
+}
