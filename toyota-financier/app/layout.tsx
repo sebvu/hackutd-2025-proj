@@ -4,6 +4,8 @@ import Header from "@/components/header";
 import "./styles/global.css"
 import "./styles/filter.css"
 import "./styles/slider.css"
+import "./styles/chatbot.css"
+import ChatbotBubble from "@/components/ChatbotBubble";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +36,7 @@ export default function RootLayout({
         <main>
           {children}
         </main>
+        <ChatbotBubble />
       </body>
     </html>
   );
