@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import HeartFill from "../assets/heart-fill.svg"
+import { preconnect } from "react-dom";
 
 type Vehicle = {
   car_id: number;
@@ -78,6 +79,21 @@ export default function FavoritesPage() {
     fetchFavorites();
   }, []);
 
+    const deleteFavorite = async (fav: Favorite) => {
+      try {
+        const res = await fetch(`/api/deleteFavorite?favorite_id=${fav.favorite_id}`, {
+          method: 'DELETE',
+        });
+        
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(`Failed to delete vehicle ${fav.car_id}`);
+        }
+      }
+      catch (err: any) {
+        setError(err.message);
+      }
+    }
   // Helper functions
   function openModal(car: Vehicle) {
     setSelectedCar(car);
@@ -301,9 +317,15 @@ export default function FavoritesPage() {
                   <button
                     className="unfavorite-confirm"
                     onClick={() => {
+                      for (let i = 0; i < favorites.length; i++) {
+                        if (favorites[i].car_id == selectedCar.car_id) {
+                          deleteFavorite(favorites[i]);
+                          break;
+                        }
+                      }
                       setFavorites((prev) =>
-                        prev.filter((fav) => fav.car_id !== selectedCar.car_id)
-                      );
+                        prev.filter((fav) => fav.car_id !== selectedCar.car_id)        
+                      );     
                       closeUnfavoriteModal();
                       // TODO: call API to remove from DB
                     }}
