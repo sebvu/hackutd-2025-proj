@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { createClient } from "@/utils/client";
+import { createBrowserSupabaseClient } from "@/utils/supabase-browser";
 
 type AuthContextType = {
   user: any;
@@ -16,7 +16,7 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const supabase = createClient();
+  const supabase = createBrowserSupabaseClient();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 

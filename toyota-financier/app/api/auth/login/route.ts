@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/utils/client";
+import { createServerSupabaseClient } from "@/utils/supabase-server";
 
 export async function POST(req: Request) {
   try {
-    const supabase = createClient();
+    const supabase = createServerSupabaseClient();
     const body = await req.json();
 
-    // Handle OAuth (Google)
     if (body.provider === "google") {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
@@ -14,12 +13,10 @@ export async function POST(req: Request) {
           redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}`,
         },
       });
-
       if (error) return NextResponse.json({ error: error.message }, { status: 400 });
       return NextResponse.json({ url: data.url }, { status: 200 });
     }
 
-    // Handle email/password login
     const { data, error } = await supabase.auth.signInWithPassword({
       email: body.email,
       password: body.password,
