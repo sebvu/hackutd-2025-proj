@@ -17,14 +17,20 @@ const Header: React.FC = () => {
       </Link>
 
       <h1>
-        Toyota Stuff
-        {user && (
-          <span
-            style={{ marginLeft: "1rem", fontSize: "1.2rem", color: "#777" }}
-          >
-            Hi, {user.user_metadata?.username || user.email.split("@")[0]}!
-          </span>
-        )}
+        <span
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            fontSize: "1.2rem",
+            color: "#777",
+            marginLeft: "0.5rem",
+          }}
+        >
+          {!user
+            ? "Toyota Stuff"
+            : `Hi, ${user.user_metadata?.username || user.email.split("@")[0]}!`}
+        </span>
       </h1>
 
       {!loading && (
