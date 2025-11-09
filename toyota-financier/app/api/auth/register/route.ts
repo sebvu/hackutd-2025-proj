@@ -4,20 +4,18 @@ import { createServerSupabaseClient } from "@/utils/supabase-server";
 export async function POST(req: Request) {
   try {
     const supabase = createServerSupabaseClient();
-    const { email, password, username, nickname } = await req.json();
+    const { username, email, password } = await req.json();
 
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: {
-          username,
-          nickname,
-        },
+        data: { username },
       },
     });
 
     if (error) {
+      console.error("Supabase error:", error);
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 

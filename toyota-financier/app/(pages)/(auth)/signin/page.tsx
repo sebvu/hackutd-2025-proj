@@ -12,6 +12,7 @@ export default function SignIn() {
     e.preventDefault();
     setErrorMsg("");
     setLoading(true);
+
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
@@ -22,7 +23,6 @@ export default function SignIn() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Login failed");
 
-      // Redirect to home after successful login
       window.location.href = "/";
     } catch (err: any) {
       setErrorMsg(err.message);
@@ -49,7 +49,6 @@ export default function SignIn() {
     <div className="signup-page-container">
       <div className="signup-container">
         <p className="signup-title-text">Sign In</p>
-
         {errorMsg && <p style={{ color: "red" }}>{errorMsg}</p>}
 
         <form className="signup-form" onSubmit={handleSubmit}>
@@ -57,7 +56,7 @@ export default function SignIn() {
             <label>Email</label>
             <input
               type="email"
-              placeholder="Email address"
+              placeholder="Enter your email"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               required
@@ -68,7 +67,7 @@ export default function SignIn() {
             <label>Password</label>
             <input
               type="password"
-              placeholder="Password"
+              placeholder="Enter your password"
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               required
@@ -80,7 +79,10 @@ export default function SignIn() {
           </button>
         </form>
 
-        <p className="signup-already-text" onClick={() => (window.location.href = "/register")}>
+        <p
+          className="signup-already-text"
+          onClick={() => (window.location.href = "/register")}
+        >
           Don’t have an account?
         </p>
         <p className="signup-or-text">or</p>
