@@ -1,24 +1,26 @@
 "use client"
 
-import { useState } from "react";
 import { Range, getTrackBackground } from "react-range";
 
 const STEP = 500;
 const MIN = 20000;
 const MAX = 50000;
 
-export default function PriceSlider() {
-  const [values, setValues] = useState([MIN, MAX]);
+type PriceSliderProps = {
+    values: [number, number];
+    setValues: (values: [number, number]) => void;
+};
 
-  return (
-    <div className="price-slider">
+export default function PriceSlider({ values, setValues }: PriceSliderProps) {
+    return (
+        <div className="price-slider">
         <label>Price Range:</label>
-            <Range
+        <Range
             values={values}
             step={STEP}
             min={MIN}
             max={MAX}
-            onChange={setValues}
+            onChange={(vals) => setValues(vals as [number, number])} // ✅ cast here
             renderTrack={({ props, children }) => (
             <div
                 {...props}
@@ -30,21 +32,20 @@ export default function PriceSlider() {
                     min: MIN,
                     max: MAX,
                 }),
-            }}
+                }}
             >
                 {children}
             </div>
             )}
-            renderThumb={({ props, index }) => {
-            const { key, ...rest } = props;
-            return <div key={index} {...rest} className="slider-thumb" />;
+            renderThumb={({ props }) => {
+                const { key, ...restProps } = props;
+                return <div key={key} {...restProps} className="slider-thumb" />;
             }}
-
         />
         <div className="slider-values">
             <span>${values[0].toLocaleString()}</span>
             <span>${values[1].toLocaleString()}</span>
         </div>
-    </div>
+        </div>
     );
 }
