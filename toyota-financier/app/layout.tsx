@@ -30,7 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Header />
-        <main style={{ marginTop: "6rem", padding: "1rem" }}>
+        <main>
           {children}
         </main>
       </body>
