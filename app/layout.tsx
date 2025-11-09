@@ -5,6 +5,7 @@ import { AuthProvider } from "@/app/contexts/AuthContext";
 import "./styles/global.css";
 import "./styles/filter.css";
 import "./styles/slider.css";
+import "./styles/favorites.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
