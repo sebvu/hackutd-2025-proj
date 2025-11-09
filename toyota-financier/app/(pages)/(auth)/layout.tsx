@@ -1,7 +1,7 @@
 // import { getUserSession } from "@/actions/auth";
 // import { redirect } from "next/navigation";
 
-import "@/app/styles/signin.css"
+import "@/app/styles/Register.css"
 
 export default async function AuthLayout({
   children,
