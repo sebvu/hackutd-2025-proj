@@ -10,8 +10,6 @@ import { useAuth } from "@/app/contexts/AuthContext";
 const Header: React.FC = () => {
   const { user, signOut, loading } = useAuth();
 
-  console.log(user);
-
   return (
     <header className="header-container">
       <Link href="/filter" className="header-logo-container">
