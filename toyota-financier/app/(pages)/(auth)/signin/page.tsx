@@ -1,47 +1,25 @@
 "use client";
 
 import React, { useState } from "react";
+import { useAuth } from "@/app/contexts/AuthContext";
 import "@/app/styles/Register.css";
 
 export default function SignIn() {
+  const { signIn } = useAuth();
   const [form, setForm] = useState({ email: "", password: "" });
-  const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErrorMsg("");
     setLoading(true);
-
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Login failed");
-
-      window.location.href = "/";
+      await signIn(form.email, form.password);
     } catch (err: any) {
       setErrorMsg(err.message);
     } finally {
       setLoading(false);
-    }
-  }
-
-  async function handleGoogleLogin() {
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ provider: "google" }),
-      });
-      const data = await res.json();
-      if (data.url) window.location.href = data.url;
-    } catch (err) {
-      console.error(err);
     }
   }
 
@@ -85,14 +63,6 @@ export default function SignIn() {
         >
           Don’t have an account?
         </p>
-        <p className="signup-or-text">or</p>
-
-        <img
-          src="/google.png"
-          alt="Google Sign-In"
-          className="signup-google-icon"
-          onClick={handleGoogleLogin}
-        />
       </div>
     </div>
   );
