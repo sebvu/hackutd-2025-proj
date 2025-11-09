@@ -279,43 +279,35 @@ export default function Filter() {
                         
                         <div className="advanced-filters-container">
                             <div
-                                className="advanced-filters-header"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setAdvancedOpen(!advancedOpen);
-                                }}
-                            >
-                                <span>⚙️ Advanced Filters</span>
+                                className={`advanced-filters-toggle ${advancedOpen ? "open" : ""}`}
+                                onClick={() => setAdvancedOpen(!advancedOpen)}
+                                >
+                                <span>Advanced Filters</span>
                                 <span className="arrow">{advancedOpen ? "▲" : "▼"}</span>
                             </div>
+
 
                             {advancedOpen && (
                                 <div
                                     className="advanced-filters-menu"
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    <div className="filter-group">
-                                        <WeightSlider values={weightRange} setValues={setWeightRange} />
-                                    </div>
+                                    <WeightSlider values={weightRange} setValues={setWeightRange} />
 
-                                    <div className="filter-group">
-                                        <HorsePowerSlider values={horsePowerRange} setValues={setHorsePowerRange} />
-                                    </div>
+                                    <HorsePowerSlider values={horsePowerRange} setValues={setHorsePowerRange} />
 
-                                    <div className="filter-group">
-                                        <label>Fuel Type:</label>
-                                        <div className="fuel-options">
-                                            {["Gasoline", "Electric", "Hybrid"].map(fuel => (
-                                                <label key={fuel} className="fuel-option">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selectedFuelTypes.includes(fuel)}
-                                                        onChange={() => toggleFuelType(fuel)}
-                                                    />
-                                                    {fuel}
-                                                </label>
-                                            ))}
-                                        </div>
+                                    <label>Fuel Type:</label>
+                                    <div>
+                                        {["Gasoline", "Electric", "Hybrid"].map(fuel => (
+                                            <label key={fuel}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedFuelTypes.includes(fuel)}
+                                                    onChange={() => toggleFuelType(fuel)}
+                                                />
+                                                {fuel}
+                                            </label>
+                                        ))}
                                     </div>
                                 </div>
                             )}
