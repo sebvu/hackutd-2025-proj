@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import { createBrowserSupabaseClient } from "@/utils/supabase-browser";
 import "@/app/styles/Register.css";
 
 export default function SignIn() {
+  const supabase = createBrowserSupabaseClient();
   const [form, setForm] = useState({ email: "", password: "" });
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
@@ -14,16 +16,15 @@ export default function SignIn() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: form.email,
+        password: form.password,
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Login failed");
+      if (error) throw new Error(error.message);
 
-      window.location.href = "/";
+      // Redirect to /filter after login
+      window.location.href = "/filter";
     } catch (err: any) {
       setErrorMsg(err.message);
     } finally {
@@ -33,15 +34,17 @@ export default function SignIn() {
 
   async function handleGoogleLogin() {
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ provider: "google" }),
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}`,
+        },
       });
-      const data = await res.json();
-      if (data.url) window.location.href = data.url;
+
+      if (error) throw error;
+      if (data?.url) window.location.href = data.url;
     } catch (err) {
-      console.error(err);
+      console.error("Google login error:", err);
     }
   }
 
