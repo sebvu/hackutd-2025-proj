@@ -446,10 +446,13 @@
 }
 
 .advanced-filters-container {
+  width: 100%;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 1rem;
   margin-top: 1rem;
-  border-top: 1px solid #ddd;
-  padding-top: 1rem;
-  transition: all 0.25s ease;
+  transition: max-height 0.3s ease;
+  overflow: visible; 
 }
 
 .advanced-filters-header {
@@ -500,6 +503,7 @@
   border-radius: 8px;
   margin-top: 0.5rem;
   padding: 0 1rem;
+  margin-bottom: 1rem;
 }
 
 .advanced-filters-container.open .advanced-filters-menu {
@@ -515,6 +519,8 @@
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(235, 10, 30, 0.1);
   background-color: #fff;
+  max-height: none;
+  overflow: visible;
 }
 
 /* Checkbox + range styling inside advanced section */
@@ -567,4 +573,15 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.awd-toggle {
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+.awd-toggle input[type="checkbox"] {
+  accent-color: #ff4d4f;
+  transform: scale(1.1);
+  margin-right: 6px;
 }
