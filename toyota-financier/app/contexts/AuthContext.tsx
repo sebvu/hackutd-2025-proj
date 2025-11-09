@@ -47,8 +47,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         emailRedirectTo: `${window.location.origin}/signin`,
       },
     });
+
     if (error) throw new Error(error.message);
-    alert("Check your email for a verification link!");
   }
 
   async function signIn(email: string, password: string) {

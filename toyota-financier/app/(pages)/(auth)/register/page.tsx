@@ -9,13 +9,17 @@ export default function Register() {
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErrorMsg("");
+    setSuccessMsg("");
     setLoading(true);
+
     try {
       await signUp(form.email, form.password, form.username);
+      setSuccessMsg("✅ Account created! Please verify your email to log in.");
     } catch (err: any) {
       setErrorMsg(err.message);
     } finally {
@@ -28,6 +32,7 @@ export default function Register() {
       <div className="signup-container">
         <p className="signup-title-text">Create an Account</p>
         {errorMsg && <p style={{ color: "red" }}>{errorMsg}</p>}
+        {successMsg && <p style={{ color: "green" }}>{successMsg}</p>}
 
         <form className="signup-form" onSubmit={handleSubmit}>
           {["username", "email", "password"].map((field) => (
