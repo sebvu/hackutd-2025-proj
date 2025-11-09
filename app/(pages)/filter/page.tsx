@@ -547,7 +547,18 @@ export default function Filter() {
       </div>
 
       {/* Chatbot bubble */}
-      <ChatbotBubble />
+      <ChatbotBubble
+        onAIUpdate={(filters) => {
+          if (filters.price) setPriceRange(filters.price);
+          if (filters.horsepower) setHorsePowerRange(filters.horsepower);
+          if (filters.mileage_city) setMileageCityRange(filters.mileage_city);
+          if (filters.mileage_highway)
+            setMileageHighwayRange(filters.mileage_highway);
+          if (filters.acceleration) setAccelerationRange(filters.acceleration);
+          if (filters.seats) setSeatRange(filters.seats);
+          if (typeof filters.awd === "boolean") setAwdrFilter(filters.awd);
+        }}
+      />
     </div>
   );
 }
