@@ -211,6 +211,29 @@
   border-color: var(--primary-red);
 }
 
+.advanced-filters-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;        
+  border-radius: 5px;        
+  cursor: pointer;          
+  user-select: none;          
+  font-weight: bold;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.advanced-filters-toggle:hover {
+  background-color: #efefef; 
+}
+
+.advanced-filters-toggle .arrow {
+  margin-left: 10px;
+  font-size: 0.9em;
+  transition: transform 0.3s;
+}
+
+
 /* Cars container */
 .cars-container {
   flex: 1;
