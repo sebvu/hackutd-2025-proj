@@ -1,50 +1,25 @@
 "use client";
 
 import React, { useState } from "react";
-import { createBrowserSupabaseClient } from "@/utils/supabase-browser";
+import { useAuth } from "@/app/contexts/AuthContext";
 import "@/app/styles/Register.css";
 
 export default function SignIn() {
-  const supabase = createBrowserSupabaseClient();
+  const { signIn } = useAuth();
   const [form, setForm] = useState({ email: "", password: "" });
-  const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErrorMsg("");
     setLoading(true);
-
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: form.email,
-        password: form.password,
-      });
-
-      if (error) throw new Error(error.message);
-
-      // Redirect to /filter after login
-      window.location.href = "/filter";
+      await signIn(form.email, form.password);
     } catch (err: any) {
       setErrorMsg(err.message);
     } finally {
       setLoading(false);
-    }
-  }
-
-  async function handleGoogleLogin() {
-    try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}`,
-        },
-      });
-
-      if (error) throw error;
-      if (data?.url) window.location.href = data.url;
-    } catch (err) {
-      console.error("Google login error:", err);
     }
   }
 
@@ -88,14 +63,6 @@ export default function SignIn() {
         >
           Don’t have an account?
         </p>
-        <p className="signup-or-text">or</p>
-
-        <img
-          src="/google.png"
-          alt="Google Sign-In"
-          className="signup-google-icon"
-          onClick={handleGoogleLogin}
-        />
       </div>
     </div>
   );

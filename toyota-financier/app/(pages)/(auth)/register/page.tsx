@@ -1,47 +1,29 @@
 "use client";
 
 import React, { useState } from "react";
+import { useAuth } from "@/app/contexts/AuthContext";
 import "@/app/styles/Register.css";
 
 export default function Register() {
+  const { signUp } = useAuth();
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErrorMsg("");
+    setSuccessMsg("");
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Registration failed");
-
-      window.location.href = "/signin";
+      await signUp(form.email, form.password, form.username);
+      setSuccessMsg("✅ Account created! Please verify your email to log in.");
     } catch (err: any) {
       setErrorMsg(err.message);
     } finally {
       setLoading(false);
-    }
-  }
-
-  async function handleGoogleSignUp() {
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ provider: "google" }),
-      });
-      const data = await res.json();
-      if (data.url) window.location.href = data.url;
-    } catch (err) {
-      console.error(err);
     }
   }
 
@@ -50,17 +32,22 @@ export default function Register() {
       <div className="signup-container">
         <p className="signup-title-text">Create an Account</p>
         {errorMsg && <p style={{ color: "red" }}>{errorMsg}</p>}
+        {successMsg && <p style={{ color: "green" }}>{successMsg}</p>}
 
         <form className="signup-form" onSubmit={handleSubmit}>
           {["username", "email", "password"].map((field) => (
             <div key={field} className="signup-form-group">
-              <label htmlFor={field}>{field.charAt(0).toUpperCase() + field.slice(1)}</label>
+              <label htmlFor={field}>
+                {field.charAt(0).toUpperCase() + field.slice(1)}
+              </label>
               <input
                 id={field}
                 type={field === "password" ? "password" : "text"}
                 placeholder={`Enter your ${field}`}
                 value={(form as any)[field]}
-                onChange={(e) => setForm({ ...form, [field]: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, [field]: e.target.value })
+                }
                 required
               />
             </div>
@@ -71,17 +58,12 @@ export default function Register() {
           </button>
         </form>
 
-        <p className="signup-already-text" onClick={() => (window.location.href = "/signin")}>
+        <p
+          className="signup-already-text"
+          onClick={() => (window.location.href = "/signin")}
+        >
           Already have an account?
         </p>
-        <p className="signup-or-text">or</p>
-
-        <img
-          src="/google.png"
-          alt="Google Sign-In"
-          className="signup-google-icon"
-          onClick={handleGoogleSignUp}
-        />
       </div>
     </div>
   );
