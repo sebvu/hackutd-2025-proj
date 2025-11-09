@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import PriceSlider from "../(slider)/page";
+import PriceSlider from "@/components/sliders/PriceSlider/page";
+import WeightSlider from "@/components/sliders/WeightSlider/page";
+import HorsePowerSlider from "@/components/sliders/HorsePowerSlider/page";
 import HighLander from "../2021_Highlander.avif";
 
 type Car = {
@@ -68,6 +70,7 @@ const carsData: Car[] = [
         body_type: "SUV",
         fuel_type: "Gasoline",
         horsepower: 203,
+        torque: 184,
         mileage_city: 27,
         mileage_highway: 35,
         tank_size: 14.5,
@@ -84,7 +87,6 @@ const carsData: Car[] = [
         fuel_type: "Hybrid",
         horsepower: 306,
         torque: 267,
-        transmission_type: "Automatic",
         mileage_city: 20,
         mileage_highway: 27,
         tank_size: 17.1,
@@ -105,8 +107,13 @@ export default function Filter() {
     const [selectedModels, setSelectedModels] = useState<string[]>([]);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [priceRange, setPriceRange] = useState<[number, number]>([20000, 50000]);
+    const [weightRange, setWeightRange] = useState<[number, number]>([2000, 10000]);
+    const [horsePowerRange, setHorsePowerRange] = useState<[number, number]>([100, 600]);
+    const [selectedFuelTypes, setSelectedFuelTypes] = useState<string[]>([]);
     const [ratingSort, setRatingSort] = useState<"asc" | "desc" | null>("desc");
     const [priceSort, setPriceSort] = useState<"asc" | "desc" | null>();
+    const [advancedOpen, setAdvancedOpen] = useState(false);
+
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedCar, setSelectedCar] = useState<Car | null>(null);
 
@@ -128,6 +135,15 @@ export default function Filter() {
         );
     }
 
+    
+    const toggleFuelType = (fuel: string) => {
+        setSelectedFuelTypes((prev) =>
+            prev.includes(fuel)
+            ? prev.filter((f) => f !== fuel) 
+            : [...prev, fuel] 
+        );
+    };
+
     function StarRating({ rating }: StarRatingProps) {
         const fullStars = Math.floor(rating);
         const halfStar = rating % 1 >= 0.5 ? 1 : 0;
@@ -146,12 +162,10 @@ export default function Filter() {
         return Number(price.replace(/[^0-9.-]+/g, ""));
     }
 
-    // Filter by selected models
     let filteredCars = selectedModels.length
         ? carsData.filter(car => selectedModels.includes(car.model))
         : carsData;
 
-    // Filter by search term (model or year)
     if (searchTerm.trim() !== "") {
         const term = searchTerm.toLowerCase();
         filteredCars = filteredCars.filter(car =>
@@ -160,7 +174,6 @@ export default function Filter() {
         );
     }
 
-    // Filter by price range
     filteredCars = filteredCars.filter(car => {
         const carMin = parsePrice(car.min_price)
         const carMax = parsePrice(car.max_price)
@@ -168,7 +181,6 @@ export default function Filter() {
         return carMax >= selectedMin && carMin <= selectedMax
     });
 
-    // Then sort by price or rating
     filteredCars = [...filteredCars].sort((a, b) => {
         if (priceSort) {
             const priceDiff = parsePrice(a.min_price) - parsePrice(b.min_price)
@@ -265,6 +277,50 @@ export default function Filter() {
                             </div>
                         </div>
                         
+                        <div className="advanced-filters-container">
+                            <div
+                                className="advanced-filters-header"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setAdvancedOpen(!advancedOpen);
+                                }}
+                            >
+                                <span>⚙️ Advanced Filters</span>
+                                <span className="arrow">{advancedOpen ? "▲" : "▼"}</span>
+                            </div>
+
+                            {advancedOpen && (
+                                <div
+                                    className="advanced-filters-menu"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <div className="filter-group">
+                                        <WeightSlider values={weightRange} setValues={setWeightRange} />
+                                    </div>
+
+                                    <div className="filter-group">
+                                        <HorsePowerSlider values={horsePowerRange} setValues={setHorsePowerRange} />
+                                    </div>
+
+                                    <div className="filter-group">
+                                        <label>Fuel Type:</label>
+                                        <div className="fuel-options">
+                                            {["Gasoline", "Electric", "Hybrid"].map(fuel => (
+                                                <label key={fuel} className="fuel-option">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedFuelTypes.includes(fuel)}
+                                                        onChange={() => toggleFuelType(fuel)}
+                                                    />
+                                                    {fuel}
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
                         <div className="clear-button">
                             <button onClick={() => {
                                 setSelectedModels([]);
