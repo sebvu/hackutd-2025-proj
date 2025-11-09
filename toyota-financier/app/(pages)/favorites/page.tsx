@@ -194,6 +194,22 @@ export default function Favorites() {
         return 0
     })
 
+    function checkValidity(cars: Car[]) {
+        if (cars.length != 0) {
+            return true;
+        }
+        return false;
+    }
+
+    function createTable() {
+        const createText = document.querySelectorAll(".creation-text");
+        if (!checkValidity(carsData)) {
+            createText[0].textContent = "Cannot create table.";
+            return;
+        }
+        createText[0].textContent = "Table created below!";
+    }
+
     return (
         <div className="favorites-page">
             <div className="main-content">
@@ -264,11 +280,66 @@ export default function Favorites() {
                         <p className="unfavorite-modal-message">Remove car from favorites?</p>
                         <div className="unfavorite-modal-btns">
                             <button className="unfavorite-cancel" onClick={closeUnfavoriteModal}>Cancel</button>
-                            <button className="unfavorite-confirm" onClick={closeUnfavoriteModal}>Remove</button>
+                            <button className="unfavorite-confirm" onClick={closeUnfavoriteModal}>Remove</button> {/* make delete car from database in future wehhhh */}
                         </div>
                     </div>
                 </div>
                 )}
+
+                <div className="fav-sidebar">
+                    <div className="sort-container">
+                        <label>Sort by Rating:</label>
+                        <div className="sort-buttons">
+                            <button
+                                className={ratingSort === "asc" ? "active" : ""}
+                                onClick={() => setRatingSort(ratingSort === "asc" ? null : "asc")}
+                            >
+                                ↑ Asc
+                            </button>
+                            <button
+                                className={ratingSort === "desc" ? "active" : ""}
+                                onClick={() => setRatingSort(ratingSort === "desc" ? null : "desc")}
+                            >
+                                ↓ Desc
+                            </button>
+                        </div>
+                        <label>Sort by Price:</label>
+                        <div className="sort-buttons">
+                            <button
+                                className={priceSort === "asc" ? "active" : ""}
+                                onClick={() => setPriceSort(priceSort === "asc" ? null : "asc")}
+                            >
+                                ↑ Asc
+                            </button>
+                            <button
+                                className={priceSort === "desc" ? "active" : ""}
+                                onClick={() => setPriceSort(priceSort === "desc" ? null : "desc")}
+                            >
+                                ↓ Desc
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="sidebar-separator"></div>
+
+                    <div className="comp-buttons">
+                        <p className="creation-text"></p>
+                        <div className="compare-button">
+                        <button onClick={() => {
+                                createTable();
+                            }}>
+                                Compare With Table
+                            </button>
+                        </div>
+                        <div className="clear-button">
+                            <button onClick={() => {
+                                // delete cars here in database or smth
+                            }}>
+                                Clear All
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

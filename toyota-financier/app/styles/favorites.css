@@ -1,3 +1,7 @@
+.cars-container {
+    width: 65vw;
+}
+
 .car-card {
     display: flex;
     flex-wrap: nowrap;
@@ -12,10 +16,14 @@
 
 .favorites-page {
     display: flex;
-    justify-content: center;
     padding: 20px;
     padding-top: 7rem;
     overflow: hidden;
+}
+
+.main-content {
+    justify-content: space-between;
+    width: 100%;
 }
 
 .unfavorite {
@@ -75,4 +83,49 @@
 
 .unfavorite-confirm:hover {
     background-color: hsl(355, 92%, 30%)
+}
+
+.fav-sidebar {
+    width: 300px;
+    background-color: #fff;
+    border: 1px solid var(--primary-gray);
+    border-radius: 8px;
+    padding: 15px;
+    overflow-y: auto; 
+    min-height: 0; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar-separator {
+    border: 1px solid var(--primary-gray);
+}
+
+.comp-buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.compare-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    margin-top: 10px;
+    background-color: var(--primary-red); 
+    color: var(--white);
+    font-weight: 600;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.creation-text {
+    min-height: 40px;
+    padding-bottom: 16px;
+    text-align: center;
+    text-justify: center;
+    color: #58595B;
 }
